@@ -1,0 +1,9 @@
+# AgentTrust - core Python runtime.
+#
+# Deliberately small: the divergence library and the orchestrator use the standard library
+# plus these two, so a clean environment can install in seconds (quality redline 4).
+numpy>=1.26
+PyYAML>=6.0
+
+# Tests
+pytest>=8.0

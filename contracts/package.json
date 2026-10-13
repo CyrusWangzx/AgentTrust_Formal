@@ -1,0 +1,26 @@
+{
+  "name": "@agenttrust/contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AgentTrust ERC-8004 Validation Registry integration contracts for Monad Testnet (chainId 10143)",
+  "license": "MIT",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network monadTestnet",
+    "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
+    "register:agent": "hardhat run scripts/register-agent.js --network monadTestnet",
+    "export:abi": "hardhat run scripts/export-abi.js",
+    "verify:deployed": "hardhat run scripts/verify-deployed.js --network monadTestnet"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
+    "@nomicfoundation/hardhat-ethers": "^3.0.8",
+    "chai": "^4.5.0",
+    "ethers": "^6.13.4",
+    "hardhat": "^2.22.18"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
+}

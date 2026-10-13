@@ -1,0 +1,124 @@
+# AgentTrust validation cohort - heterogeneity declaration (spec 2.5)
+#
+# Anti-fake-heterogeneity triad, all three of which are enforced by
+# `validators/cohort.py::verify_heterogeneity()` before a cohort is allowed to run:
+#
+#   1. different underlying model source      -> `model_family`
+#   2. different vendor / inference endpoint  -> `provider` (resolved endpoint URL)
+#   3. different prompting framework + stack  -> `framework`
+#
+# Additionally: cohort members never share context. They receive the `TaskRequest` and
+# nothing else; verdicts are exchanged only through the orchestrator. See
+# `orchestrator/orchestrator.py`.
+#
+# HONESTY NOTE (quality redline 1 - display only what is true):
+# The `live` cohort below ships with two *model families* (qwen, kimi) because those are the
+# two credentials named in the work order. A 5-member cohort therefore spans 2 families with
+# distinct endpoints and frameworks per member. That satisfies the practical reading of the
+# triad (no member is a duplicate of another on all three axes) but NOT a strict
+# all-families-distinct reading, which needs a third provider - see `optional_third_family`.
+# `verify_heterogeneity(strict=True)` reports exactly this difference rather than pretending.
+
+version: 1
+
+settings:
+  # `cohort` is `live`, `offline` or `auto`. `auto` = live members whose credential is
+  # present, falling back to the offline deterministic cohort when fewer than
+  # `min_usable` live members can run.
+  cohort: auto
+  min_usable: 2          # spec 2.6: fewer than 2 usable validators -> INSUFFICIENT_VALIDATORS
+  max_rounds: 3          # spec 2.4: K = 3 rehearsal rounds before escalation
+  tag_round_1: soft
+  tag_round_k: hard
+
+live_members:
+  - name: qwen-planner
+    source: qwen_max
+    model_family: qwen
+    model_env: QWEN_MODEL
+    model_default: qwen3-max
+    provider: dashscope-cn
+    endpoint_env: DASHSCOPE_BASE_URL
+    framework: react-plan-then-act
+    weight: 1.0
+    address_env: AGENTTRUST_VALIDATOR_ADDRESS_1
+    # TODO(owner): the on-chain address this validation agent signs from
+
+  - name: qwen-red-team
+    source: qwen_max
+    model_family: qwen
+    model_env: QWEN_MODEL
+    model_default: qwen3-max
+    provider: dashscope-intl
+    endpoint_env: DASHSCOPE_INTL_BASE_URL
+    framework: adversarial-red-team
+    weight: 1.0
+    address_env: AGENTTRUST_VALIDATOR_ADDRESS_2
+    # TODO(owner): the on-chain address this validation agent signs from
+
+  - name: kimi-auditor
+    source: kimi
+    model_family: kimi
+    model_env: KIMI_MODEL
+    model_default: kimi-k2.6
+    provider: moonshot-cn
+    endpoint_env: MOONSHOT_BASE_URL
+    framework: checklist-audit
+    weight: 1.0
+    address_env: AGENTTRUST_VALIDATOR_ADDRESS_3
+    # TODO(owner): the on-chain address this validation agent signs from
+
+  - name: kimi-explorer
+    source: kimi
+    model_family: kimi
+    model_env: KIMI_MODEL
+    model_default: kimi-k2.6
+    provider: moonshot-intl
+    endpoint_env: MOONSHOT_INTL_BASE_URL
+    framework: breadth-first-exploration
+    weight: 1.0
+    address_env: AGENTTRUST_VALIDATOR_ADDRESS_4
+    # TODO(owner): the on-chain address this validation agent signs from
+
+  - name: qwen-reflexion
+    source: qwen_max
+    model_family: qwen
+    model_env: QWEN_MODEL
+    model_default: qwen3-max
+    provider: dashscope-cn
+    endpoint_env: DASHSCOPE_BASE_URL
+    framework: reflexion-self-critique
+    weight: 1.0
+    address_env: AGENTTRUST_VALIDATOR_ADDRESS_5
+    # TODO(owner): the on-chain address this validation agent signs from
+
+# Optional third family. Adding a credential here upgrades the cohort to strict mode (all
+# model families distinct). Any OpenAI-compatible endpoint works: a self-hosted Qwen/Llama
+# deployment, a second vendor, or a local inference server.
+optional_third_family:
+  enabled: false
+  name: third-family-auditor
+  source: openai_compatible
+  model_family: "<third-family>"       # TODO(owner): set when the credential lands
+  model_env: THIRD_FAMILY_MODEL
+  model_default: ""
+  provider: third-family-cn
+  endpoint_env: THIRD_FAMILY_BASE_URL
+  framework: checklist-audit
+  weight: 1.0
+
+# Offline cohort: deterministic, non-model fixtures. Used by `scripts/demo --offline`, the
+# test suite, and as the `auto` fallback when fewer than `min_usable` live members are
+# configured. Never presented as a model result.
+offline_members:
+  # Opposing stances, scaled per task by `payload.risk_fraction`. This is what lets the online
+  # demo exercise the Approved / Rehearse / Rejected bands without a provider credential.
+  - name: offline-hold-a
+    stance: -0.8
+    scale: 1.0
+  - name: offline-abstain-b
+    stance: 0.0
+    scale: 1.0
+  - name: offline-push-c
+    stance: 0.8
+    scale: 1.0

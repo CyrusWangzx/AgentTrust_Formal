@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgentTrust - Pre-Execution Verification Panel</title>
+  <link rel="icon" href="./assets/AgentTrust_logo_icon.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="./assets/AgentTrust_logo_icon.png" alt="AgentTrust" class="brand-logo" />
+      <div>
+        <h1>AgentTrust</h1>
+        <p class="tagline">Pre-execution verification for AI agents, on ERC-8004 Validation Registry</p>
+      </div>
+    </div>
+    <div class="chain-block">
+      <span id="chain-badge" class="badge badge-muted">connecting</span>
+      <button id="connect-wallet" type="button" class="btn">Connect wallet</button>
+      <button id="refresh" type="button" class="btn">Refresh</button>
+    </div>
+  </header>
+
+  <div id="source-banner" class="banner banner-muted" role="status"></div>
+  <p id="wallet-line" class="wallet-line hidden" role="status"></p>
+
+  <main>
+    <section class="panel">
+      <h2>Mechanism</h2>
+      <div class="formula-grid">
+        <div class="formula">
+          <span class="formula-label">Aggregation (spec 2.3)</span>
+          <code>D_total = 0.4&middot;D_disc + 0.3&middot;D_traj + 0.3&middot;D_end</code>
+        </div>
+        <div class="formula">
+          <span class="formula-label">Relative divergence</span>
+          <code>D_rel = D_total / D_base</code>
+        </div>
+        <div class="formula">
+          <span class="formula-label">Decision bands (spec 2.4)</span>
+          <code>D_rel &le; 1.5 &rarr; Approved &middot; 1.5 &lt; D_rel &le; 3.0 &rarr; Rehearse &middot; D_rel &gt; 3.0 &rarr; Rejected / Escalate</code>
+        </div>
+      </div>
+      <p class="muted small" id="constants-line">
+        Reading the frozen constants from the contract&hellip;
+      </p>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Validation records</h2>
+        <span class="muted small" id="record-count"></span>
+      </div>
+      <div id="records" class="records"></div>
+      <p id="empty-state" class="muted hidden">
+        No validation records found. Run <code>python scripts/demo/run_demo.py</code> to
+        produce one, then refresh.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Cohort heterogeneity declaration (spec 2.5)</h2>
+      <p class="muted small">
+        Three constraints, enforced before a cohort may run: different model source, different
+        vendor endpoint, different prompting framework.
+      </p>
+      <div id="heterogeneity" class="hetero"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>AgentTrust &middot; StarryCrab Tech</span>
+    <span id="footer-build" class="muted small"></span>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

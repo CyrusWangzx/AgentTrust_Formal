@@ -1,0 +1,21 @@
+# Normalise line endings in the repository regardless of the platform that checks it out.
+# Working on Windows otherwise turns every LF file into a 1-line-wide diff the first time
+# someone edits it.
+* text=auto eol=lf
+
+# Binary assets - never touch these.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.pdf  binary
+*.woff binary
+*.woff2 binary
+
+# Windows-only helpers, if any are ever added, keep their native endings.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Lockfiles are generated; keep them out of diffs and merge conflicts.
+contracts/package-lock.json -diff linguist-generated

@@ -1,0 +1,86 @@
+{
+  "cohort_mode": "offline",
+  "generatedAt": "2026-10-13T20:29:33+00:00",
+  "offline": true,
+  "member_count": 3,
+  "available": [
+    "offline-hold-a",
+    "offline-abstain-b",
+    "offline-push-c"
+  ],
+  "max_rounds": 3,
+  "min_usable": 2,
+  "members": [
+    {
+      "agent": "offline-hold-a",
+      "model": "none-offline-fixture",
+      "provider": "offline-deterministic",
+      "framework": "deterministic-fixture",
+      "endpoint": "offline://deterministic"
+    },
+    {
+      "agent": "offline-abstain-b",
+      "model": "none-offline-fixture",
+      "provider": "offline-deterministic",
+      "framework": "deterministic-fixture",
+      "endpoint": "offline://deterministic"
+    },
+    {
+      "agent": "offline-push-c",
+      "model": "none-offline-fixture",
+      "provider": "offline-deterministic",
+      "framework": "deterministic-fixture",
+      "endpoint": "offline://deterministic"
+    }
+  ],
+  "heterogeneity": {
+    "applicable": false,
+    "ok": false,
+    "strict_ok": false,
+    "members": 3,
+    "model_families": [
+      "unknown"
+    ],
+    "providers": [
+      "offline"
+    ],
+    "frameworks": [
+      "deterministic-fixture"
+    ],
+    "clashes": [
+      "offline-hold-a == offline-abstain-b on all three axes",
+      "offline-hold-a == offline-push-c on all three axes",
+      "offline-abstain-b == offline-push-c on all three axes"
+    ],
+    "notes": [
+      "cohort spans a single model family: constraint 1 is not met"
+    ],
+    "reason": "offline deterministic fixture - the triad applies to live model cohorts; see live_heterogeneity"
+  },
+  "live_heterogeneity": {
+    "ok": true,
+    "strict_ok": false,
+    "members": 5,
+    "model_families": [
+      "kimi",
+      "qwen"
+    ],
+    "providers": [
+      "dashscope-cn",
+      "dashscope-intl",
+      "moonshot-cn",
+      "moonshot-intl"
+    ],
+    "frameworks": [
+      "adversarial-red-team",
+      "breadth-first-exploration",
+      "checklist-audit",
+      "react-plan-then-act",
+      "reflexion-self-critique"
+    ],
+    "clashes": [],
+    "notes": [
+      "two or more members share a model family; endpoints and frameworks still differ. Enable optional_third_family in cohort.yaml to reach strict mode."
+    ]
+  }
+}

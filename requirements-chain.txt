@@ -1,0 +1,13 @@
+# AgentTrust - live chain writes only.
+#
+# The core demo and the whole test suite run without these. Install only when you intend to
+# send real transactions to Monad Testnet (10143):
+#
+#   pip install -r requirements-chain.txt
+#
+# `web3` pulls in the signing and ABI-encoding stack used by orchestrator/chain.py's
+# RegistryClient. Kept separate so the reproducible offline path stays dependency-light.
+
+-r requirements.txt
+
+web3>=6.20

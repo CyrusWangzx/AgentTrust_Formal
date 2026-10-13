@@ -1,0 +1,24 @@
+{
+  "project": "AgentTrust",
+  "contract": "AgentTrustValidationRegistry",
+  "standard": "ERC-8004 Validation Registry",
+  "network": {
+    "name": "Monad Testnet",
+    "chainId": 10143,
+    "rpcUrl": "https://testnet-rpc.monad.xyz"
+  },
+  "deployer": "0xfB93Ab52150DbCB723E5355BdDCEfA37E4317514",
+  "registryAddress": "0x4479D63b5780e5DBa95feEB057Ed57B8E20b7053",
+  "registryExplorerUrl": "https://testnet.monadscan.com/address/0x4479D63b5780e5DBa95feEB057Ed57B8E20b7053",
+  "deployBlock": 70771345,
+  "deployTxHash": "0x74e8c2260905ff92206a9904dda073023845dc1a27496918bc0f5afd87cea9ac",
+  "deployExplorerUrl": "https://testnet.monadscan.com/tx/0x74e8c2260905ff92206a9904dda073023845dc1a27496918bc0f5afd87cea9ac",
+  "initializeTxHash": "0x95db0f97048b9de111bcb72482bb9c5e0bf5847ccc6a27c693251d40793d60bd",
+  "initializeExplorerUrl": "https://testnet.monadscan.com/tx/0x95db0f97048b9de111bcb72482bb9c5e0bf5847ccc6a27c693251d40793d60bd",
+  "initializeBlock": 70771352,
+  "identityRegistryAddress": "0xd6DA14b5cCC14F7b4f3CE4A8c7469F42B33979ac",
+  "identityRegistryTxHash": "0xfa0dc40e3a3958414d268f1afdc181adf66fac6d3ba04d1062bb429eac5ea709",
+  "identityRegistryIsMock": true,
+  "deployedAt": "2026-10-13T20:03:34.585Z",
+  "solidity": "0.8.24"
+}
