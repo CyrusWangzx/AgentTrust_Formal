@@ -48,3 +48,9 @@ npm-cache/
 # not part of the deliverable - the same reasoning as `artifacts/` above.
 # ---------------------------------------------------------------------------------------
 .workbuddy/
+
+# ---------------------------------------------------------------------------------------
+# Vercel CLI. `vercel link` writes frontend/.vercel/project.json (projectId + orgId) - that is
+# per-machine link state, recreated on demand by `vercel link` or `vercel --prod`.
+# ---------------------------------------------------------------------------------------
+.vercel/

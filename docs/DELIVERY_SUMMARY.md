@@ -26,6 +26,9 @@ outstanding. Nothing below is rounded up.
 | 11 | **Contract actually deployed** | `python scripts/verify_deployment.py` + `npm run verify:deployed` | registry `0x4479D6…7053`, bytecode `13302` bytes, chain **10143**, frozen constants `400/300/300`, `1500/3000`, `kRounds 3` all read back ✅ |
 | 12 | **Live chain write path exercised** | `python .tmp/chain_state.py` | 2 cohort lifecycles finalised on chain — **Approved** (`D_rel` 0.289) and **Escalated** (`D_rel` 3.975), both read back with matching divergence |
 | 13 | **Gas measured, not guessed** | `python .tmp/gas_probe.py` | full 3-task live demo **~1.31 MON** at estimated limit vs **~4.59 MON** under the old blanket 3M limit |
+| 14 | **Panel publicly reachable** | `check-host.net` probe from 5 external nodes (PT/RS/RU/SE/GB) | all **HTTP 200**, resolved to real Vercel edge IPs (`64.29.17.x` / `216.198.79.x`) — i.e. no Vercel login wall |
+| 15 | **Panel serves the right page** | `api.microlink.io` fetch of the live URL | title `AgentTrust - Pre-Execution Verification Panel`; page text contains `D_total = 0.4·D_disc + 0.3·D_traj + 0.3·D_end` |
+| 16 | **Panel sub-resources reachable** | `check-host.net` probe of `/data/deployment.json` | HTTP 200 from DE/NL/US nodes |
 
 **Demo output** (`artifacts/latest-record.json`, `frontend/data/records.json`):
 
@@ -50,7 +53,7 @@ what makes the deployed write path trustworthy rather than merely present.
 | D3 | Divergence library + unit tests | ✅ | `D_disc`/`D_traj`/`D_end`/`D_total`/`D_rel` + Kendall's W; `calibrate.py` slot present and non-blocking |
 | D4 | Orchestration — fan-out, verdict collection, thresholds, K-round machine | ✅ | threaded fan-out, fail-closed `INSUFFICIENT_VALIDATORS` / `INSUFFICIENT_BASELINE` |
 | D5 | Heterogeneous validator config + triad declaration | ✅ | 5 live members (Qwen ×3 / Kimi ×2) across 4 endpoints and 5 frameworks; offline fixture cohort for credential-free runs |
-| D6 | Verification panel reading Monad Testnet | ✅ local | reads registry events from the deploy block in 50-block windows; verified in a Node DOM harness and over HTTP. **Public URL not yet created — owner deploy (see §4)** |
+| D6 | Verification panel reading Monad Testnet | ✅ **DEPLOYED** | **<https://agenttrust-panel.vercel.app>** — reads the registry's own `CohortValidationOpened` events in 50-block windows. Verified publicly reachable from 5 external nodes (HTTP 200) and content-checked (page title + rendered `D_total` formula). Node DOM harness: 12/12 |
 | D7 | Testnet deployment evidence | ✅ **DEPLOYED** | registry `0x4479D63b5780e5DBa95feEB057Ed57B8E20b7053` on chain 10143, deploy block `70771345`; `DEPLOYMENT.md` carries the receipt and the two live cohort records |
 | D8 | End-to-end demo script | ✅ | `python scripts/demo/run_demo.py`, one command, five stages; `--chain live` writes through to the deployed registry |
 | D9 | Demo + pitch video scripts | ✅ | `docs/DEMO_SCRIPT.md` (180 s storyboard, 9 shots), `docs/PITCH_SCRIPT.md` (120 s, 30/45/30/15, EN + 中文对照) |
@@ -93,6 +96,19 @@ what makes the deployed write path trustworthy rather than merely present.
 8. **Monad bills the full gas limit, so the writer estimates.** A hardcoded limit costs the same
    whether the call needs 52 697 gas or 429 648 (`finalizeValidation` vs `openCohortValidation`).
    Details and measured numbers in `DEPLOYMENT.md` §2b.
+9. **The Vercel deployment needed two non-obvious settings.** (a) Vercel CLI 64 no longer has
+   `--name`, and `--project` only *selects* an existing project — so the project was created
+   through the REST API first (`agenttrust-panel`), then deployed into it. (b) The new project
+   came up with **Deployment Protection (Vercel Authentication) enabled**, which would have put a
+   login wall in front of every judge; it was turned off via
+   `PATCH /v9/projects/agenttrust-panel {"ssoProtection": null}`. Both are recorded because a
+   re-deploy from scratch would hit them again.
+10. **`*.vercel.app` is not reachable from the machine that deployed it.** Local DNS resolves
+    `agenttrust-panel.vercel.app` to `128.242.250.157` (a Meta range) and every request times out
+    — the classic signature of DNS interference on mainland networks. This is a *local network*
+    fact only: five external nodes and a third-party page fetcher all reach the site over HTTP
+    200. The README therefore also documents the local `python -m http.server` fallback, so a
+    reviewer on a blocked network is never stuck.
 
 ---
 
@@ -106,7 +122,7 @@ what makes the deployed write path trustworthy rather than merely present.
 | 4 | `cd contracts && npm run deploy:testnet` then fill `DEPLOYMENT.md` §4 from the receipt | Needs #1 | ✅ done — receipt in `contracts/deployments/monad-testnet-10143.json`, §4 filled from it |
 | 5 | **Top up the deployer (~1.4 MON)** and re-run the full 3-task live demo | Funds | ⏳ balance is **0.031 MON** — see the run command below |
 | 6 | Create the GitHub repo and push | I have not run any `git` command: the standing instruction is not to commit or push without an explicit go-ahead | ⏳ |
-| 7 | Deploy `frontend/` to Vercel or GitHub Pages | Account authorisation; the directory is a static site as-is | ⏳ |
+| 7 | Deploy `frontend/` to Vercel or GitHub Pages | Account authorisation; the directory is a static site as-is | ✅ done — <https://agenttrust-panel.vercel.app> (project `agenttrust-panel`, team `cyrus-2117`); Vercel Authentication was turned **off** so judges are not stopped by a login wall |
 | 8 | Record the two videos from `docs/DEMO_SCRIPT.md` and `docs/PITCH_SCRIPT.md` | Needs #5–#7 done first | ⏳ |
 
 The one command that closes #5:

@@ -17,6 +17,20 @@
   <img alt="license" src="https://img.shields.io/badge/license-MIT-1e6e46" />
 </p>
 
+<p align="center">
+  <a href="https://agenttrust-panel.vercel.app"><strong>▶ Live verification panel</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://testnet.monadscan.com/address/0x4479D63b5780e5DBa95feEB057Ed57B8E20b7053">Registry on MonadScan</a>
+  &nbsp;·&nbsp;
+  <a href="DEPLOYMENT.md">Deployment record</a>
+</p>
+
+> **The panel is live and reads chain 10143 directly.** Open
+> <https://agenttrust-panel.vercel.app> — it enumerates the registry's own
+> `CohortValidationOpened` events and renders every recorded decision. If you are on a network
+> where `*.vercel.app` is unreachable, run `cd frontend && python -m http.server 8080` and open
+> <http://localhost:8080> instead; it is the same static site.
+
 ---
 
 ## The problem
@@ -156,7 +170,10 @@ Sample output (`artifacts/latest-record.json`):
 
 ### 3. Open the verification panel
 
+**Deployed:** <https://agenttrust-panel.vercel.app>
+
 ```bash
+# or run it locally - same static site, no build step
 cd frontend && python -m http.server 8080
 # then open http://localhost:8080
 ```
@@ -328,7 +345,7 @@ swapped for a dry-run ledger by one argument.
 | D3 | Divergence library + unit tests | `divergence/`, `tests/` |
 | D4 | Orchestration — fan-out, verdict collection, thresholds, K-round machine | `orchestrator/` |
 | D5 | Heterogeneous validator config + triad declaration | `validators/cohort.yaml` |
-| D6 | Verification panel reading Monad Testnet | `frontend/` |
+| D6 | Verification panel reading Monad Testnet | **[agenttrust-panel.vercel.app](https://agenttrust-panel.vercel.app)** (`frontend/`) |
 | D7 | Testnet deployment evidence | [DEPLOYMENT.md](DEPLOYMENT.md) |
 | D8 | End-to-end demo script | `scripts/demo/run_demo.py` |
 | D9 | Demo + pitch video scripts | [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md), [docs/PITCH_SCRIPT.md](docs/PITCH_SCRIPT.md) |
